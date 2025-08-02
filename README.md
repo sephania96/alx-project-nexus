@@ -1,4 +1,35 @@
 # alx-project-nexus
+Poll System Backend
+Project Overview
+This project is a robust and scalable backend for an online poll system, built using Django and Django REST Framework. It leverages PostgreSQL for efficient data storage and provides comprehensive API documentation through Swagger UI. The system is designed to handle poll creation, user voting, and real-time result computation, with a focus on performance and ease of use.
+
+Key Features:
+Poll Management:
+APIs for creating, retrieving, updating, and deleting polls.
+Each poll includes a title, description, creation date, and an optional expiry date.
+Option to allow or disallow multiple votes per user per poll.
+Voting System:
+Secure APIs for authenticated users to cast votes on poll options.
+Built-in validation to prevent duplicate voting (unless explicitly allowed by the poll settings).
+Checks for active and unexpired polls before allowing votes.
+Real-time Result Computation:
+Efficiently calculates and displays vote counts and percentages for each option in real-time.
+Optimized database queries for scalability, ensuring quick access to results even with many votes.
+API Documentation:
+Interactive API documentation powered by Swagger UI, accessible at /api/docs/.
+Provides clear descriptions of all endpoints, request/response schemas, and authentication methods.
+PostgreSQL Database:
+Utilizes PostgreSQL for its reliability, performance, and advanced features, making it suitable for production environments.
+Technologies Used
+Backend Framework: Django 4.2.7
+API Framework: Django REST Framework 3.14.0
+Database: PostgreSQL
+API Documentation: drf-yasg (Swagger/OpenAPI)
+Environment Variables: python-decouple
+CORS Handling: django-cors-headers
+Web Server (Production): Gunicorn
+
+
 
 ## Project Objective
 
