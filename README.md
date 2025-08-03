@@ -14,7 +14,7 @@ Built-in validation to prevent duplicate voting (unless explicitly allowed by th
 Checks for active and unexpired polls before allowing votes.
 Real-time Result Computation:
 Efficiently calculates and displays vote counts and percentages for each option in real-time.
-Optimized database queries for scalability, ensuring quick access to results even with many votes.
+Optimized database queries for scalability, ensuring quick access to results even with many votes...
 API Documentation:
 Interactive API documentation powered by Swagger UI, accessible at /api/docs/.
 Provides clear descriptions of all endpoints, request/response schemas, and authentication methods.
