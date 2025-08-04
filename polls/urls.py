@@ -12,4 +12,5 @@ urlpatterns = [
     path('my-votes/', views.user_votes, name='user-votes'),
     path('my-polls/', views.my_polls, name='my-polls'),
     path('student/login/', StudentLoginView.as_view(), name='student-login'),
+    path('api/login/', StudentLoginView.as_view(), name='student-login'),
 ]
