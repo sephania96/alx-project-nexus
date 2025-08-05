@@ -226,12 +226,3 @@ class StudentLoginView(generics.CreateAPIView):
             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class StudentLoginView(APIView):
-       def post(self, request):
-           index_number = request.data.get('index_number')
-           pin = request.data.get('pin')
-           # Your authentication logic here
-           # If successful:
-           return Response({'token': 'your_token'}, status=status.HTTP_200_OK)
-           # If failed:
-           # return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
