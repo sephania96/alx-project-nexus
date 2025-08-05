@@ -48,7 +48,10 @@ class StudentAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at']
     
     def save_model(self, request, obj, form, change):
-        # If this is a new student and no PIN is set, you can set a default
-        if not change and not obj.pin:
-            obj.set_pin('1234')  # Default PIN, change this logic as needed
+        # If this is a new student or PIN was changed
+        if not change or 'pin' in form.changed_data:
+            # Get the raw PIN from the form
+            raw_pin = form.cleaned_data.get('pin')
+            if raw_pin:
+                obj.set_pin(raw_pin)  # Hash the PIN
         super().save_model(request, obj, form, change)
