@@ -53,16 +53,16 @@ class PollOption(models.Model):
     def __str__(self):
         return f"{self.poll.title} - {self.text}"
     
-    @property
-    def vote_count(self):
+    def vote_count(self):  # Method instead of @property
         return self.votes.count()
-    
+
+    vote_count.short_description = 'Vote Count'  # For admin display
     @property
     def vote_percentage(self):
         total_votes = self.poll.total_votes
         if total_votes == 0:
             return 0
-        return round((self.vote_count / total_votes) * 100, 2)
+        return round((self.vote_count() / total_votes) * 100, 2)  # Note: vote_count() with parentheses
 
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
