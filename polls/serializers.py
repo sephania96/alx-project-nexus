@@ -4,12 +4,18 @@ from django.utils import timezone
 from .models import Poll, PollOption, Vote, Student
 
 class PollOptionSerializer(serializers.ModelSerializer):
-    vote_count = serializers.ReadOnlyField()
-    vote_percentage = serializers.ReadOnlyField()
+    vote_count = serializers.SerializerMethodField()
+    vote_percentage = serializers.SerializerMethodField()
     
     class Meta:
         model = PollOption
         fields = ['id', 'text', 'vote_count', 'vote_percentage']
+
+    def get_vote_count(self, obj):
+        return obj.vote_count()
+    
+    def get_vote_percentage(self, obj):
+        return obj.vote_percentage
 
 class PollOptionCreateSerializer(serializers.ModelSerializer):
     class Meta:
