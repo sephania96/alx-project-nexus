@@ -85,7 +85,7 @@ class Student(models.Model):
         return f"{self.index_number} - {self.full_name}"
 
 class Vote(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     option = models.ForeignKey(PollOption, on_delete=models.CASCADE, related_name='votes')
     voted_at = models.DateTimeField(auto_now_add=True)
