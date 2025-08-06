@@ -225,4 +225,69 @@ class StudentLoginView(generics.CreateAPIView):
                 'message': 'Login successful'
             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    method='post',
+    operation_description="Student vote with index number and PIN",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['index_number', 'pin', 'option_id'],
+        properties={
+            'index_number': openapi.Schema(type=openapi.TYPE_STRING),
+            'pin': openapi.Schema(type=openapi.TYPE_STRING),
+            'option_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+        }
+    ),
+    responses={
+        201: "Vote recorded successfully",
+        400: "Bad Request",
+        404: "Option not found"
+    }
+)
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def student_vote(request):
+    """
+    Student vote with authentication
+    """
+    index_number = request.data.get('index_number')
+    pin = request.data.get('pin')
+    option_id = request.data.get('option_id')
     
+    if not all([index_number, pin, option_id]):
+        return Response(
+            {'error': 'index_number, pin, and option_id are required'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Authenticate student
+    try:
+        student = Student.objects.get(index_number=index_number)
+        if not student.check_pin(pin):
+            return Response(
+                {'error': 'Invalid credentials'}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+    except Student.DoesNotExist:
+        return Response(
+            {'error': 'Invalid credentials'}, 
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    # Get poll option
+    try:
+        option = PollOption.objects.get(id=option_id)
+    except PollOption.DoesNotExist:
+        return Response(
+            {'error': 'Poll option not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    # Check if student already voted 
+    
+    return Response({
+        'message': 'Vote recorded successfully',
+        'student': student.index_number,
+        'poll': option.poll.title,
+        'choice': option.text
+    }, status=status.HTTP_201_CREATED)
