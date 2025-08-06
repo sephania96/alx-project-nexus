@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Student
 
 class Poll(models.Model):
     title = models.CharField(max_length=200)
