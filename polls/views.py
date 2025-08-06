@@ -145,11 +145,7 @@ def poll_results(request, poll_id):
     Get real-time results for a specific poll.
     """
     poll = get_object_or_404(
-        Poll.objects.prefetch_related(
-            Prefetch('options', queryset=PollOption.objects.annotate(
-                vote_count=Count('votes')
-            ))
-        ),
+        Poll.objects.prefetch_related('options'),  # Remove the annotation
         id=poll_id
     )
     
