@@ -64,6 +64,26 @@ class PollOption(models.Model):
             return 0
         return round((self.vote_count() / total_votes) * 100, 2)  # Note: vote_count() with parentheses
 
+class Student(models.Model):
+    index_number = models.CharField(max_length=20, unique=True)
+    full_name = models.CharField(max_length=100)
+    pin = models.CharField(max_length=128)  # Store hashed PIN
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['index_number']),
+        ]
+    
+    def set_pin(self, raw_pin):
+        self.pin = make_password(raw_pin)
+    
+    def check_pin(self, raw_pin):
+        return check_password(raw_pin, self.pin)
+    
+    def __str__(self):
+        return f"{self.index_number} - {self.full_name}"
+
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
@@ -132,22 +152,3 @@ class Vote(models.Model):
         if not self.option.poll.is_active:
             raise ValidationError("Cannot vote on inactive poll")
         
-class Student(models.Model):
-    index_number = models.CharField(max_length=20, unique=True)
-    full_name = models.CharField(max_length=100)
-    pin = models.CharField(max_length=128)  # Store hashed PIN
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        indexes = [
-            models.Index(fields=['index_number']),
-        ]
-    
-    def set_pin(self, raw_pin):
-        self.pin = make_password(raw_pin)
-    
-    def check_pin(self, raw_pin):
-        return check_password(raw_pin, self.pin)
-    
-    def __str__(self):
-        return f"{self.index_number} - {self.full_name}"
