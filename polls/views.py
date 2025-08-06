@@ -284,10 +284,29 @@ def student_vote(request):
         )
     
     # Check if student already voted 
-    
+    # Check if student already voted on this poll
+    existing_vote = Vote.objects.filter(
+        student=student,
+        option__poll=option.poll
+    ).exists()
+
+    if existing_vote:
+        return Response(
+            {'error': 'You have already voted in this poll'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Create the vote
+    vote = Vote.objects.create(
+        student=student,
+        option=option,
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+
     return Response({
         'message': 'Vote recorded successfully',
         'student': student.index_number,
         'poll': option.poll.title,
-        'choice': option.text
+        'choice': option.text,
+        'vote_id': vote.id
     }, status=status.HTTP_201_CREATED)

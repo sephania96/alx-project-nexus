@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
+from .models import Student
 
 class Poll(models.Model):
     title = models.CharField(max_length=200)
@@ -66,31 +67,63 @@ class PollOption(models.Model):
 
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     option = models.ForeignKey(PollOption, on_delete=models.CASCADE, related_name='votes')
     voted_at = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     
     class Meta:
-        unique_together = ['user', 'option']
-        indexes = [
+        # Update constraints
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'option'],
+                condition=models.Q(user__isnull=False),
+                name='unique_user_vote'
+            ),
+            models.UniqueConstraint(
+                fields=['student', 'option'],
+                condition=models.Q(student__isnull=False),
+                name='unique_student_vote'
+            ),
+        ]
+    
+    indexes = [
             models.Index(fields=['user', 'option']),
+            models.Index(fields=['student', 'option']),  # Add this
             models.Index(fields=['voted_at']),
             models.Index(fields=['option']),
         ]
-    
+
     def __str__(self):
-        return f"{self.user.username} voted for {self.option.text}"
-    
+        if self.user:
+            return f"{self.user.username} voted for {self.option.text}"
+        elif self.student:
+            return f"{self.student.index_number} voted for {self.option.text}"
+        return f"Anonymous vote for {self.option.text}"
+
     def clean(self):
+        # Ensure either user or student is set, but not both
+        if not self.user and not self.student:
+            raise ValidationError("Either user or student must be set")
+        if self.user and self.student:
+            raise ValidationError("Cannot set both user and student")
+        
         # Check if poll allows multiple votes
         if not self.option.poll.allow_multiple_votes:
-            existing_vote = Vote.objects.filter(
-                user=self.user,
-                option__poll=self.option.poll
-            ).exclude(pk=self.pk).exists()
+            existing_vote = None
+            if self.user:
+                existing_vote = Vote.objects.filter(
+                    user=self.user,
+                    option__poll=self.option.poll
+                ).exclude(pk=self.pk).exists()
+            elif self.student:
+                existing_vote = Vote.objects.filter(
+                    student=self.student,
+                    option__poll=self.option.poll
+                ).exclude(pk=self.pk).exists()
             
             if existing_vote:
-                raise ValidationError("User has already voted in this poll")
+                raise ValidationError("Already voted in this poll")
         
         # Check if poll is expired
         if self.option.poll.is_expired:
