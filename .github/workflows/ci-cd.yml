@@ -25,10 +25,16 @@ jobs:
       run: |
         python manage.py makemigrations
         python manage.py migrate
+      env:
+        SECRET_KEY: test-secret-key
+        DATABASE_URL: sqlite:///test.db
 
     - name: Run tests
       run: |
         python manage.py test
+      env:
+        SECRET_KEY: test-secret-key
+        DATABASE_URL: sqlite:///test.db
 
     - name: Deploy to Heroku
       uses: akhileshns/heroku-deploy@v3.13.15
