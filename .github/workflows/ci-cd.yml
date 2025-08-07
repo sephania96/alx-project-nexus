@@ -44,4 +44,3 @@ jobs:
         heroku_email: ${{ secrets.HEROKU_EMAIL }}
         usedocker: false
         dontautocreate: true
-#corrected
