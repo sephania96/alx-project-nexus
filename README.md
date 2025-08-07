@@ -1,84 +1,103 @@
-# alx-project-nexus
-Poll System Backend
-Project Overview
-This project is a robust and scalable backend for an online poll system, built using Django and Django REST Framework. It leverages PostgreSQL for efficient data storage and provides comprehensive API documentation through Swagger UI. The system is designed to handle poll creation, user voting, and real-time result computation, with a focus on performance and ease of use.
+# Project Nexus
 
-Key Features:
-Poll Management:
-APIs for creating, retrieving, updating, and deleting polls.
-Each poll includes a title, description, creation date, and an optional expiry date.
-Option to allow or disallow multiple votes per user per poll.
-Voting System:
-Secure APIs for authenticated users to cast votes on poll options.
-Built-in validation to prevent duplicate voting (unless explicitly allowed by the poll settings).
-Checks for active and unexpired polls before allowing votes.
-Real-time Result Computation:
-Efficiently calculates and displays vote counts and percentages for each option in real-time.
-Optimized database queries for scalability, ensuring quick access to results even with many votes...
-API Documentation:
-Interactive API documentation powered by Swagger UI, accessible at /api/docs/.
-Provides clear descriptions of all endpoints, request/response schemas, and authentication methods.
-PostgreSQL Database:
-Utilizes PostgreSQL for its reliability, performance, and advanced features, making it suitable for production environments.
-Technologies Used
-Backend Framework: Django 4.2.7
-API Framework: Django REST Framework 3.14.0
-Database: PostgreSQL
-API Documentation: drf-yasg (Swagger/OpenAPI)
-Environment Variables: python-decouple
-CORS Handling: django-cors-headers
-Web Server (Production): Gunicorn
+A secure, real-time online polling system built with Django and PostgreSQL, featuring student authentication, robust API endpoints, and continuous deployment to Heroku.
 
+---
 
+## 🚀 Features
 
-## Project Objective
+- **Student Authentication:** Students log in with index number and PIN (securely hashed).
+- **Poll Management:** Create, update, and delete polls with multiple options.
+- **Voting System:** Each student can vote only once per poll.
+- **Real-Time Results:** Live vote counts and percentages for each poll option.
+- **RESTful API:** Clean, well-documented endpoints (Swagger/OpenAPI).
+- **Admin Panel:** Manage polls, options, and students.
+- **Error Handling:** Clear, consistent error messages.
+- **CI/CD:** Automated testing and deployment via GitHub Actions.
+- **Deployed on Heroku:** Accessible from anywhere.
 
-The objective of this project is to:
+---
 
-- Consolidate key learnings from the ProDev Backend Engineering program.
-- Document major backend technologies, concepts, challenges, and solutions.
-- Serve as a reference guide for both current and future learners.
-- Foster collaboration between frontend and backend learners.
+## 🛠️ Tech Stack
 
-## Overview of the ProDev Backend Engineering Program
+- **Backend:** Django, Django REST Framework
+- **Database:** PostgreSQL (Heroku)
+- **Authentication:** Custom Student model with PIN hashing
+- **API Docs:** drf-yasg (Swagger/OpenAPI)
+- **CI/CD:** GitHub Actions
+- **Deployment:** Heroku
 
-The ProDev Backend Engineering program is an intensive curriculum designed to equip learners with core backend development skills. It emphasizes real-world projects, industry best practices, and collaboration among peers.
+---
 
-## Major Learnings
+## 📦 Setup & Installation
 
-### Key Technologies Covered
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/sephania96/alx-project-nexus.git
+    cd project-nexus
+    ```
 
-- **Python**: Core programming language used for backend services.
-- **Django**: Web framework for rapid backend development.
-- **REST APIs**: Designing and implementing RESTful services.
-- **GraphQL**: Alternative to REST for flexible client-server interactions.
-- **Docker**: Containerization for consistent development and deployment environments.
-- **CI/CD**: Automation pipelines for testing, integration, and deployment.
+2. **Create and activate a virtual environment:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  
+    ```
 
-### Important Backend Development Concepts
+3. **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-- **Database Design**: Schema design, normalization, indexing, and relationships.
-- **Asynchronous Programming**: Using async/await for non-blocking operations.
-- **Caching Strategies**: Techniques to optimize performance with tools like Redis.
+4. **Configure environment variables:**
+    - Create a `.env` file or set variables in your environment:
+      ```
+      SECRET_KEY=your-secret-key
+      DEBUG=True
+      DATABASE_URL=postgres://user:password@localhost:5432/poll_system
+      ```
 
-## Challenges & Solutions
+5. **Apply migrations:**
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
 
-- **Challenge**: Managing API versioning in production systems.
-  - **Solution**: Implemented versioned URLs and used documentation for smooth upgrades.
+6. **Create a superuser (for admin access):**
+    ```bash
+    python manage.py createsuperuser
+    ```
 
-- **Challenge**: Integrating CI/CD in legacy systems.
-  - **Solution**: Gradual migration using GitHub Actions and Docker.
+7. **Run the development server:**
+    ```bash
+    python manage.py runserver
+    ```
 
-- **Challenge**: Efficiently handling background tasks.
-  - **Solution**: Integrated Celery with RabbitMQ for scalable task queues.
+---
 
-## Best Practices & Takeaways
+## 🌐 API Endpoints
 
-- Write clean, modular, and well-documented code.
-- Use environment variables and secrets management.
-- Write unit and integration tests early in the development cycle.
-- Communicate effectively with team members (especially frontend engineers).
-- Document APIs thoroughly using Swagger/OpenAPI.
+| Endpoint                              | Method | Description                        |
+|----------------------------------------|--------|------------------------------------|
+| `/api/polls/`                         | GET    | List all polls                     |
+| `/api/polls/`                         | POST   | Create a new poll                  |
+| `/api/polls/<id>/`                    | GET    | Retrieve poll details              |
+| `/api/polls/<id>/results/`            | GET    | Get real-time poll results         |
+| `/api/polls/student/login/`           | POST   | Student login (index & PIN)        |
+| `/api/polls/student-vote/`            | POST   | Student vote (index, PIN, option)  |
+| `/api/polls/user-votes/`              | GET    | Get user's voting history          |
+| `/api/polls/my-polls/`                | GET    | Get polls created by current user  |
+
+- **API Docs:**  
+  - Swagger UI: `/swagger/`
+  - ReDoc: `/redoc/`
+- **Admin Panel:** `/admin/`
+
+---
+
+## 🧪 Running Tests
+
+```bash
+python manage.py test
 
 ## Collaboration Hub
 
@@ -102,6 +121,6 @@ Collaboration is key to success. Learners are encouraged to:
 
 ---
 
-> **Repository**: [alx-project-nexus](https://github.com/your-username/alx-project-nexus)
+> **Repository**: [alx-project-nexus](https://github.com/sephania96/alx-project-nexus)
 
 > Commit and push your README.md with proper markdown formatting.
