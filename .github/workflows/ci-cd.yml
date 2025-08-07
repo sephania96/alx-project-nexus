@@ -44,3 +44,4 @@ jobs:
         heroku_email: ${{ secrets.HEROKU_EMAIL }}
         usedocker: false
         dontautocreate: true
+        heroku_git_remote: false
